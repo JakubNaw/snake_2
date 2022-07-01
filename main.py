@@ -3,6 +3,8 @@ from sqlalchemy.orm import sessionmaker
 from functools import partial
 from tkinter import *
 import funkcje
+import login
+import rankingi
 import time
 from PIL import ImageTk, Image
 engine = db.create_engine("mysql://root:2002Madzia@localhost:3306/snake")
@@ -25,8 +27,7 @@ menu_start.title("SNAKE ")# ustwienie tytułu okienka
 menu_start.iconphoto(False,ikona_dla_okienka)
 predkosc_X=5
 predkosc_Y=3
-predkosc_X_1=5
-predkosc_Y_1=3
+
 canvas = Canvas(menu_start,width=750, height= 750,bg="#76e95f")
 canvas.pack()
 glowa_img_1 = Image.open("C:/Users/user/PycharmProjects/snake_2/window_icon.png")#tworzenie obrazu glowy
@@ -38,56 +39,56 @@ tlo = canvas.create_image(150,0,image = tlo_image, anchor=NW)
 start_button = Button(canvas, text = 'START',
                     font = ('Calibiri',25), background='white',
                     relief = RAISED,bd = 10,compound = "bottom",
-                    )
+                    command= partial(login.login, session, ikona_dla_okienka, menu_start,canvas,glowa))
 start_button.place(x=320, y=450)
 rankingi_button = Button(canvas, text = 'RANKINGI',
                     font = ('Calibiri',25), background='white',
                     relief = RAISED,bd = 10,compound = "bottom",
-                    )
+                    command= partial(rankingi.rankingi, session, ikona_dla_okienka, menu_start,canvas,glowa))
 rankingi_button.place(x=294, y=540)
 
 while True:
     coordinates = canvas.coords(glowa)
     if(coordinates[0]<=0 ):
-        predkosc_X= -(predkosc_X)
-        if (predkosc_Y > 0):
-            glowa_img = glowa_img_1.rotate(315)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
-        else:
-            glowa_img = glowa_img_1.rotate(45)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
+            predkosc_X= -(predkosc_X)
+            if (predkosc_Y > 0):
+                    glowa_img = glowa_img_1.rotate(315)
+                    glowa_photo = ImageTk.PhotoImage(glowa_img)
+                    canvas.itemconfig(glowa, image=glowa_photo)
+            else:
+                    glowa_img = glowa_img_1.rotate(45)
+                    glowa_photo = ImageTk.PhotoImage(glowa_img)
+                    canvas.itemconfig(glowa, image=glowa_photo)
     if(coordinates[0]>=710):
-        predkosc_X = -(predkosc_X)
-        if(predkosc_Y>0):
-            glowa_img = glowa_img_1.rotate(225)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
-        else:
-            glowa_img = glowa_img_1.rotate(135)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
+            predkosc_X = -(predkosc_X)
+            if(predkosc_Y>0):
+                glowa_img = glowa_img_1.rotate(225)
+                glowa_photo = ImageTk.PhotoImage(glowa_img)
+                canvas.itemconfig(glowa, image=glowa_photo)
+            else:
+                glowa_img = glowa_img_1.rotate(135)
+                glowa_photo = ImageTk.PhotoImage(glowa_img)
+                canvas.itemconfig(glowa, image=glowa_photo)
     if (coordinates[1] <= 0 ):
-        predkosc_Y = -(predkosc_Y)
-        if (predkosc_X > 0):
-            glowa_img = glowa_img_1.rotate(315)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
-        else:
-            glowa_img = glowa_img_1.rotate(225)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
+            predkosc_Y = -(predkosc_Y)
+            if (predkosc_X > 0):
+                glowa_img = glowa_img_1.rotate(315)
+                glowa_photo = ImageTk.PhotoImage(glowa_img)
+                canvas.itemconfig(glowa, image=glowa_photo)
+            else:
+                glowa_img = glowa_img_1.rotate(225)
+                glowa_photo = ImageTk.PhotoImage(glowa_img)
+                canvas.itemconfig(glowa, image=glowa_photo)
     if ( coordinates[1] >= 710):
-        predkosc_Y = -(predkosc_Y)
-        if (predkosc_X > 0):
-            glowa_img = glowa_img_1.rotate(45)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
-        else:
-            glowa_img = glowa_img_1.rotate(135)
-            glowa_photo = ImageTk.PhotoImage(glowa_img)
-            canvas.itemconfig(glowa, image=glowa_photo)
+            predkosc_Y = -(predkosc_Y)
+            if (predkosc_X > 0):
+                glowa_img = glowa_img_1.rotate(45)
+                glowa_photo = ImageTk.PhotoImage(glowa_img)
+                canvas.itemconfig(glowa, image=glowa_photo)
+            else:
+                glowa_img = glowa_img_1.rotate(135)
+                glowa_photo = ImageTk.PhotoImage(glowa_img)
+                canvas.itemconfig(glowa, image=glowa_photo)
     canvas.move(glowa,predkosc_X,predkosc_Y)
     menu_start.update()
     time.sleep(0.01)
