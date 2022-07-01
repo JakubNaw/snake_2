@@ -34,6 +34,7 @@ def powrot(stare_okno, nowe_okno,canvas,glowa):
     glowa_img_1 = Image.open("C:/Users/user/PycharmProjects/snake_2/window_icon.png")  # tworzenie obrazu glowy
     glowa_img = glowa_img_1.rotate(315)  # przechyalnie obrazu o 315 stopni
     glowa_photo = ImageTk.PhotoImage(glowa_img)  # tworzenie photoimage z obruconego obrazu
+
     while True:
         coordinates = canvas.coords(glowa)
         if (coordinates[0] <= 0):
