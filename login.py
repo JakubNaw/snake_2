@@ -18,9 +18,25 @@ def login(session, ikona_dla_okienka, menu_start, canvas, glowa):
     guzik_powrotu.place(x=0, y=0)
     # labele
     login_label = Label(okienko_logowania, font=('Calibri', 25), bg='#76e95f', text='Login')
-    login_label.place(x=200, y=200)
+    login_label.place(x=180, y=200)
     haslo_label = Label(okienko_logowania, font=('Calibri', 25), bg='#76e95f', text='Hasło')
-    haslo_label.place(x=200, y=250)
+    haslo_label.place(x=180, y=250)
     brak_konta_label = Label(okienko_logowania, font=('Calibri', 15), bg='#76e95f', text='Nie masz konta?')
-    brak_konta_label.place(x=270, y=310)
+    brak_konta_label.place(x=345, y=430)
+    informacja_logowania_label = Label(okienko_logowania, font=('Calibri', 15), bg='#76e95f',fg='red', text='')
+    informacja_logowania_label.place(x=345, y=400)
+    # entry boxy
+    login_entry = Entry(okienko_logowania, font=("Calibri", 23), background='white')
+    login_entry.place(x=265, y=200)
+    haslo_entry = Entry(okienko_logowania, font=("Calibri", 23), background='white')
+    haslo_entry.place(x=265, y=250)
+    # button
+    zaloguj_button = Button(okienko_logowania, text='Zaloguj sie',
+                          font=('Calibiri', 20), background='white',
+                          relief=RAISED, bd=10, compound="bottom",
+                          command=partial(funkcje.zaloguj_sie, session, ikona_dla_okienka, okienko_logowania, login_entry, haslo_entry, informacja_logowania_label))
+    zaloguj_button.place(x=330, y=310)
+    zarejestruj_button = Button(okienko_logowania, text='Zarejestruj sie' ,
+                          font=('Calibiri', 15), background='white', relief=RAISED, bd=10, compound="bottom")
+    zarejestruj_button.place(x=337, y=460)
 
