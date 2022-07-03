@@ -14,6 +14,11 @@ print("Success:", engine)  # udalo sie polaczyc z baza danych
 # utworznnie sesji
 Session = sessionmaker(bind=engine)
 session = Session()
+# lista = [1, 2, 10, 4, 7, 5, 25, 60, 1, 0, 25]
+# funkcje.quicksort(lista, 0, 10)
+# print("posortowana lista")
+# for i in lista:
+#     print(i)
 funkcje.czytaj_dane_do_logowania(session)
 funkcje.czytaj_informacje(session)
 # tworzenie okna

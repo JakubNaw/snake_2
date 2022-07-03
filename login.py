@@ -1,6 +1,7 @@
 import funkcje
 from functools import partial
 from tkinter import *
+import rejestracja
 
 
 def login(session, ikona_dla_okienka, menu_start, canvas, glowa):
@@ -37,6 +38,7 @@ def login(session, ikona_dla_okienka, menu_start, canvas, glowa):
                           command=partial(funkcje.zaloguj_sie, session, ikona_dla_okienka, okienko_logowania, login_entry, haslo_entry, informacja_logowania_label))
     zaloguj_button.place(x=330, y=310)
     zarejestruj_button = Button(okienko_logowania, text='Zarejestruj sie' ,
-                          font=('Calibiri', 15), background='white', relief=RAISED, bd=10, compound="bottom")
+                          font=('Calibiri', 15), background='white', relief=RAISED, bd=10, compound="bottom",
+                          command= partial(rejestracja.rejestracja, session, ikona_dla_okienka, okienko_logowania))
     zarejestruj_button.place(x=337, y=460)
 
