@@ -37,7 +37,7 @@ def czytaj_informacje(session):
     print()
 
 
-def powrot(stare_okno, nowe_okno , canvas, glowa):
+def powrot(stare_okno, nowe_okno, canvas, glowa):
     # funnkcja powrotu do bylego okna
     nowe_okno.withdraw()
     stare_okno.deiconify()
@@ -100,7 +100,7 @@ def zaloguj_sie(session, ikonka_dla_okienka, okienko_logowania, login_entry, has
         sprawdzenie = session.query(Dane_do_logowania).filter(
             Dane_do_logowania.login == login_1).one()
         if sprawdzenie.haslo == haslo_1:
-            uzytkownik.uzytkownik(session, ikonka_dla_okienka, okienko_logowania)
+            uzytkownik.uzytkownik(session, ikonka_dla_okienka, okienko_logowania, login_1)
         else:
             info_label.place(x=320, y=400)
             info_label.config(text='podałeś błędne hasło')
@@ -117,7 +117,7 @@ def wyloguj_sie(stare_okno, nowe_okno):
 
 def wypelnianie_rankingu(session, listbox):
     lista_recordy = []
-    lista_loginy =[]
+    lista_loginy = []
     for rekord in session.query(Informacje):
         lista_recordy.append(rekord.record)
         lista_loginy.append(rekord.login)
@@ -133,7 +133,7 @@ def wypelnianie_rankingu(session, listbox):
         print(i)
     x = 1
     while x <= len(lista[0]):
-        listbox.insert(x, '   ' +str(lista[0][x-1])+'  '+str(lista[1][x-1]))
+        listbox.insert(x, '   ' + str(lista[0][x-1])+'  '+str(lista[1][x-1]))
         print(x)
         x = x+1
 
@@ -147,47 +147,64 @@ def quicksort(lista, lewy, prawy):
     j = lewy
     i = lewy
     while i < prawy:
-        if (lista[1][i] < piwot):
+        if lista[1][i] < piwot:
             # print(i)
             # print(j)
             pomocnicza = lista[1][i]
             pomocnicza_2 = lista[0][i]
             lista[0][i] = lista[0][j]
             lista[0][j] = pomocnicza_2
-            lista[1][i]=lista[1][j]
-            lista[1][j]=pomocnicza
+            lista[1][i] = lista[1][j]
+            lista[1][j] = pomocnicza
             j = j+1
         i = i+1
 
     lista[0][prawy] = lista[0][j]
     lista[1][prawy] = lista[1][j]
     lista[1][j] = piwot
-    lista[0][j]= piwot_login
+    lista[0][j] = piwot_login
     if lewy < j - 1:
         quicksort(lista, lewy, j - 1)
     if j + 1 < prawy:
         quicksort(lista, j + 1, prawy)
 
-def rejestracja(session, login_entry, haslo_entry, haslo_again_entry, informacja_label):
+
+def rejestracja(session, login_entry, haslo_entry, haslo_again_entry, informacja_label, ikonka_dla_okienka,
+                okinko_rejestracji):
     login_1 = login_entry.get()
     haslo_1 = haslo_entry.get()
     haslo_2 = haslo_again_entry.get()
     # print(len(login_1))
     if len(login_1) < 5:
         informacja_label.config(text='login jest za krótki')
-    elif len(login_1) >15:
+    elif len(login_1) > 15:
         informacja_label.config(text='login jest za długi')
-    elif len(haslo_1)< 5:
+    elif len(haslo_1) < 5:
         informacja_label.config(text='haslo jest za krótkie')
-    elif len(haslo_1) >15:
+    elif len(haslo_1) > 15:
         informacja_label.config(text='haslo jest za długie')
     elif haslo_1 != haslo_2:
+        informacja_label.place(x=320, y=460)
         informacja_label.config(text='podano dwa różne hasła')
     else:
         try:
             session.add(Dane_do_logowania(login=login_1, haslo=haslo_1))
             session.add(Informacje(login=login_1, record=0, games_played=0))
             session.commit()
+            uzytkownik.uzytkownik(session, ikonka_dla_okienka, okinko_rejestracji, login_1)
             informacja_label.config(text='udało się zarejestrować uzytkownika')
         except BaseException:
+            informacja_label.place(x=275, y=460)
             informacja_label.config(text='uzytkownik o danym loginie istnieje')
+
+
+def rekord(session, login_1):
+    rekord_1 = session.query(Informacje).filter(
+        Informacje.login == login_1).one()
+    return str(rekord_1.record)
+
+
+def games_played(session, login_1):
+    games_played_1 = session.query(Informacje).filter(
+        Informacje.login == login_1).one()
+    return str(games_played_1.games_played)

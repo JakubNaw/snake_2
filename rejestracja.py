@@ -13,8 +13,8 @@ def rejestracja(session, ikona_dla_okienka, okienko_logowania):
     okienko_rejestracji.title("EKRAN UŻYTKOWNIKA")  # ustawienie tytulu okna
     # guzik do wylogowywania sie
     guzik_portow = Button(okienko_rejestracji, text='<--', font=('Calibiri', 25), background='white',
-                            relief=RAISED, bd=10, compound="bottom", state=ACTIVE,
-                            command=partial(funkcje.wyloguj_sie, okienko_logowania, okienko_rejestracji))
+                          relief=RAISED, bd=10, compound="bottom", state=ACTIVE,
+                          command=partial(funkcje.wyloguj_sie, okienko_logowania, okienko_rejestracji))
     guzik_portow.place(x=0, y=0)
 
     # label
@@ -24,7 +24,7 @@ def rejestracja(session, ikona_dla_okienka, okienko_logowania):
     haslo_label.place(x=180, y=250)
     haslo_again_label = Label(okienko_rejestracji, font=('Calibri', 25), bg='#76e95f', text='Powtórz Hasło')
     haslo_again_label.place(x=60, y=300)
-    informacja_rejestracji_label = Label(okienko_rejestracji, font=('Calibri', 15), bg='#76e95f', fg='red', text='info')
+    informacja_rejestracji_label = Label(okienko_rejestracji, font=('Calibri', 15), bg='#76e95f', fg='red', text='')
     informacja_rejestracji_label.place(x=345, y=460)
 
     # entrybox
@@ -37,9 +37,11 @@ def rejestracja(session, ikona_dla_okienka, okienko_logowania):
 
     # button
     zarejestruj_button = Button(okienko_rejestracji, text='Zarejestruj się',
-                            font=('Calibiri', 20), background='white',
-                            relief=RAISED, bd=10, compound="bottom",
-                            command=partial(funkcje.rejestracja,session, login_entry, haslo_entry, haslo_again_entry, informacja_rejestracji_label))
+                                font=('Calibiri', 20), background='white',
+                                relief=RAISED, bd=10, compound="bottom",
+                                command=partial(funkcje.rejestracja, session, login_entry, haslo_entry,
+                                                haslo_again_entry, informacja_rejestracji_label, ikona_dla_okienka,
+                                                okienko_rejestracji))
     zarejestruj_button.place(x=320, y=370)
 
     okienko_rejestracji.mainloop()

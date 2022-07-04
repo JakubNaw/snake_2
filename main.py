@@ -42,14 +42,14 @@ glowa = canvas.create_image(30, 26, image=glowa_photo, anchor=NW)
 tlo_image = PhotoImage(file="C:/Users/user/PycharmProjects/snake_2/zdjecie_w_tle.png")
 tlo = canvas.create_image(150, 0, image=tlo_image, anchor=NW)
 start_button = Button(canvas, text='START',
-                    font=('Calibiri', 25), background='white',
-                    relief=RAISED, bd=10, compound="bottom",
-                    command=partial(login.login, session, ikona_dla_okienka, menu_start, canvas, glowa))
+                      font=('Calibiri', 25), background='white',
+                      relief=RAISED, bd=10, compound="bottom",
+                      command=partial(login.login, session, ikona_dla_okienka, menu_start, canvas, glowa))
 start_button.place(x=320, y=450)
 rankingi_button = Button(canvas, text='RANKINGI',
-                    font=('Calibiri', 25), background='white',
-                    relief=RAISED, bd=10, compound="bottom",
-                    command=partial(rankingi.rankingi, session, ikona_dla_okienka, menu_start, canvas, glowa))
+                         font=('Calibiri', 25), background='white',
+                         relief=RAISED, bd=10, compound="bottom",
+                         command=partial(rankingi.rankingi, session, ikona_dla_okienka, menu_start, canvas, glowa))
 rankingi_button.place(x=294, y=540)
 
 while True:
