@@ -30,9 +30,9 @@ def rejestracja(session, ikona_dla_okienka, okienko_logowania):
     # entrybox
     login_entry = Entry(okienko_rejestracji, font=("Calibri", 23), background='white')
     login_entry.place(x=265, y=200)
-    haslo_entry = Entry(okienko_rejestracji, font=("Calibri", 23), background='white')
+    haslo_entry = Entry(okienko_rejestracji, font=("Calibri", 23), background='white', show='*')
     haslo_entry.place(x=265, y=250)
-    haslo_again_entry = Entry(okienko_rejestracji, font=("Calibri", 23), background='white')
+    haslo_again_entry = Entry(okienko_rejestracji, font=("Calibri", 23), background='white', show='*')
     haslo_again_entry.place(x=265, y=300)
 
     # button

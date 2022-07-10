@@ -19,10 +19,11 @@ def uzytkownik(session, ikona_dla_okienka, okienko_logowania, login):
     # labele
     login_label = Label(okienko_uzytkownika, font=('Calibri', 15), bg='#76e95f', text=login)
     login_label.place(x=550, y=20)
-    record_label = Label(okienko_uzytkownika, font=('Calibri', 15), bg='#76e95f', text=funkcje.rekord(session, login))
+    record_label = Label(okienko_uzytkownika, font=('Calibri', 15), bg='#76e95f', text='rekord: ' +
+                                                                                       funkcje.rekord(session, login))
     record_label.place(x=550, y=50)
     games_played_label = Label(okienko_uzytkownika, font=('Calibri', 15), bg='#76e95f',
-                               text=funkcje.games_played(session, login))
+                               text='games played: '+ funkcje.games_played(session, login))
     games_played_label.place(x=550, y=80)
     tlo_image = PhotoImage(file="C:/Users/user/PycharmProjects/snake_2/zdjecie_w_tle.png")
     tlo_label = Label(okienko_uzytkownika, image=tlo_image, bg='#76e95f')
@@ -30,7 +31,8 @@ def uzytkownik(session, ikona_dla_okienka, okienko_logowania, login):
     # button
     graj_button = Button(okienko_uzytkownika, text='GRAJ',
                          font=('Calibiri', 30), background='white', relief=RAISED, bd=10, compound="bottom",
-                         command=partial(gra.granie, session, ikona_dla_okienka, okienko_uzytkownika, login))
+                         command=partial(gra.granie, session, ikona_dla_okienka, okienko_uzytkownika, login ,
+                                         games_played_label, record_label))
     graj_button.place(x=320, y=560)
 
     okienko_uzytkownika.mainloop()

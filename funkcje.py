@@ -47,7 +47,9 @@ def powrot(stare_okno, nowe_okno, canvas, glowa):
     predkosc_X = 5
     predkosc_Y = 3
     glowa_img_1 = Image.open("C:/Users/user/PycharmProjects/snake_2/window_icon.png")  # tworzenie obrazu glowy
-
+    glowa_img = glowa_img_1.rotate(315)
+    glowa_photo = ImageTk.PhotoImage(glowa_img)
+    canvas.itemconfig(glowa, image=glowa_photo)
     while True:
         coordinates = canvas.coords(glowa)
         if coordinates[0] <= 0:
@@ -115,6 +117,7 @@ def zaloguj_sie(session, ikonka_dla_okienka, okienko_logowania, login_entry, has
 def wyloguj_sie(stare_okno, nowe_okno):
     nowe_okno.withdraw()
     stare_okno.deiconify()
+
     stare_okno.mainloop()
 
 
@@ -125,19 +128,19 @@ def wypelnianie_rankingu(session, listbox):
         lista_recordy.append(rekord.record)
         lista_loginy.append(rekord.login)
     lista = [lista_loginy, lista_recordy]
-    for i in lista:
-        print(i)
-    print(lista[0][1])
-    print(len(lista))
+    # for i in lista:
+    #     print(i)
+    # print(lista[0][1])
+    # print(len(lista))
     quicksort(lista, 0, len(lista[0])-1)
     lista[0].reverse()
     lista[1].reverse()
-    for i in lista:
-        print(i)
+    # for i in lista:
+    #     print(i)
     x = 1
     while x <= len(lista[0]):
         listbox.insert(x, '   ' + str(lista[0][x-1])+'  '+str(lista[1][x-1]))
-        print(x)
+        # print(x)
         x = x+1
 
 
@@ -230,13 +233,15 @@ class Cialo:
 
 class Jedzenie:
     def __init__(self, canvas):
+
         x = random.randint(0, 14) * 50  # 14 - bo szerokosc 750 a szerokosc jedzenia 50
         y = random.randint(0, 12) * 50
         self.wspolrzedne = [x, y]
         canvas.create_oval(x, y, x+50, y+50, fill='red', tag='jedzenie')
 
 
-def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka, login):
+def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka, login,
+         games_played_label, rekord_label):
     x, y = cialo.wspolrzedne[0]
 
     if kierunek == 'gora':
@@ -247,7 +252,6 @@ def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko
         x = x + 50
     elif kierunek == 'lewo':
         x = x - 50
-    print(kierunek)
     cialo.wspolrzedne.insert(0, (x, y))
     kwadrat = canvas.create_rectangle(x, y, x + 50, y + 50, fill='green', tag='wonsz')
     cialo.kwadraty.insert(0, kwadrat)
@@ -262,10 +266,11 @@ def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko
         canvas.delete(cialo.kwadraty[-1])
         del cialo.kwadraty[-1]
     if kolizja(cialo):
-        game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, login, wynik)
+        game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, login, wynik,
+                  games_played_label, rekord_label)
     else:
         okienko_gry.after(200, ruch, cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session,
-                          ikona_dla_okienka, login)
+                          ikona_dla_okienka, login, games_played_label, rekord_label)
 
 
 def zmiana_kierunku(nowy_kierunek):
@@ -283,20 +288,17 @@ def zmiana_kierunku(nowy_kierunek):
 
 def kolizja(cialo):
     x, y = cialo.wspolrzedne[0]
-
     if x < 0 or x >= 750:
-        print("game over")
         return True
-    if y < 0 or y >= 750:
-        print("game over")
+    if y < 0 or y >= 650:
         return True
     for segment in cialo.wspolrzedne[1:]:
         if x == segment[0] and y == segment[1]:
-            print('game over')
             return True
 
 
-def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, login, wynik):
+def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, login, wynik,
+              games_played_label, rekord_label):
     zmiana_rekordku(session, login, wynik)
     zmiana_ilosci_gier(session, login)
     canvas.delete(ALL)
@@ -304,17 +306,19 @@ def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dl
     kierunek = 'dol'
     canvas.create_text(375, 325, font=('calibri', 60), text="GAME OVER", fill='red')
     powrot_button = Button(canvas, text='Wróć', font=('Calibiri', 25), background='white', relief=RAISED, bd=10,
-                           compound="bottom", command=partial(wyloguj_sie, stare_okienko, okienko_gry))
+                           compound="bottom", command=partial(wyjscie_z_gry, stare_okienko, okienko_gry,
+                                                              games_played_label, rekord_label, session, login))
     powrot_button.place(x=190, y=370)
     graj_dalej_button = Button(canvas, text='GRAJ DALEJ', font=('Calibiri', 25), background='white', relief=RAISED,
                                bd=10, compound="bottom")
     graj_dalej_button.config(command=partial(play_again, okienko_gry, canvas, wynik_label, stare_okienko, session,
-                                             ikona_dla_okienka, graj_dalej_button, powrot_button))
+                                             ikona_dla_okienka, graj_dalej_button, powrot_button, login,
+                                             games_played_label, rekord_label))
     graj_dalej_button.place(x=330, y=370)
 
 
 def play_again(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, graj_dalej_button,
-               powrot_button, login):
+               powrot_button, login, games_played_label, rekord_label):
     canvas.delete(ALL)
     graj_dalej_button.destroy()
     powrot_button.destroy()
@@ -322,7 +326,8 @@ def play_again(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_d
     wynik_label.config(text='Wynik:'+str(wynik))
     cialo = Cialo(2, canvas)
     jedzenie = Jedzenie(canvas)
-    ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka, login)
+    ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka, login,
+         games_played_label, rekord_label)
 
 
 def zmiana_rekordku(session, login_1, nowy_wynik):
@@ -336,3 +341,11 @@ def zmiana_ilosci_gier(session, login_1):
     zmiana_ilosc = session.query(Informacje).filter(Informacje.login == login_1).one()
     zmiana_ilosc.games_played = zmiana_ilosc.games_played + 1
     session.commit()
+
+
+def wyjscie_z_gry(stare_okno, nowe_okno, games_played_label, rekord_label, session, login):
+    nowe_okno.withdraw()
+    stare_okno.deiconify()
+    rekord_label.config(text='rekord: ' + rekord(session, login))
+    games_played_label.config(text='games played: ' + games_played(session, login))
+    stare_okno.mainloop()

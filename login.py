@@ -29,7 +29,7 @@ def login(session, ikona_dla_okienka, menu_start, canvas, glowa):
     # entry boxy
     login_entry = Entry(okienko_logowania, font=("Calibri", 23), background='white')
     login_entry.place(x=265, y=200)
-    haslo_entry = Entry(okienko_logowania, font=("Calibri", 23), background='white')
+    haslo_entry = Entry(okienko_logowania, font=("Calibri", 23), background='white', show='*')
     haslo_entry.place(x=265, y=250)
     # button
     zaloguj_button = Button(okienko_logowania, text='Zaloguj sie',
