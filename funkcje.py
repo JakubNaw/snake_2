@@ -236,7 +236,7 @@ class Jedzenie:
         canvas.create_oval(x, y, x+50, y+50, fill='red', tag='jedzenie')
 
 
-def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka):
+def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka, login):
     x, y = cialo.wspolrzedne[0]
 
     if kierunek == 'gora':
@@ -262,10 +262,10 @@ def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko
         canvas.delete(cialo.kwadraty[-1])
         del cialo.kwadraty[-1]
     if kolizja(cialo):
-        game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka)
+        game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, login, wynik)
     else:
         okienko_gry.after(200, ruch, cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session,
-                          ikona_dla_okienka)
+                          ikona_dla_okienka, login)
 
 
 def zmiana_kierunku(nowy_kierunek):
@@ -296,7 +296,9 @@ def kolizja(cialo):
             return True
 
 
-def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka):
+def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, login, wynik):
+    zmiana_rekordku(session, login, wynik)
+    zmiana_ilosci_gier(session, login)
     canvas.delete(ALL)
     global kierunek
     kierunek = 'dol'
@@ -312,7 +314,7 @@ def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dl
 
 
 def play_again(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, graj_dalej_button,
-               powrot_button):
+               powrot_button, login):
     canvas.delete(ALL)
     graj_dalej_button.destroy()
     powrot_button.destroy()
@@ -320,4 +322,17 @@ def play_again(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_d
     wynik_label.config(text='Wynik:'+str(wynik))
     cialo = Cialo(2, canvas)
     jedzenie = Jedzenie(canvas)
-    ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka)
+    ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka, login)
+
+
+def zmiana_rekordku(session, login_1, nowy_wynik):
+    zmiana_rec = session.query(Informacje).filter(Informacje.login == login_1).one()
+    if zmiana_rec.record < nowy_wynik:
+        zmiana_rec.record = nowy_wynik
+        session.commit()
+
+
+def zmiana_ilosci_gier(session, login_1):
+    zmiana_ilosc = session.query(Informacje).filter(Informacje.login == login_1).one()
+    zmiana_ilosc.games_played = zmiana_ilosc.games_played + 1
+    session.commit()

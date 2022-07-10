@@ -3,7 +3,7 @@ from functools import partial
 from tkinter import *
 
 
-def granie(session, ikona_dla_okienka, uzytkownik):
+def granie(session, ikona_dla_okienka, uzytkownik, login):
     okienko_gry = Toplevel()  # ustawienie nowego okna jako glownego
     uzytkownik.withdraw()  # zamykanie starego okna
     okienko_gry.resizable(width=False, height=False)  # ustawienie braku zmiany rozmiaru okna
@@ -34,6 +34,6 @@ def granie(session, ikona_dla_okienka, uzytkownik):
     okienko_gry.bind("<s>", lambda event: funkcje.zmiana_kierunku('dol'))
     okienko_gry.bind("<a>", lambda event: funkcje.zmiana_kierunku('lewo'))
     okienko_gry.bind("<d>", lambda event: funkcje.zmiana_kierunku('prawo'))
-    funkcje.ruch(wonsz, jedzienie, okienko_gry, canvas, wynik, wynik_label, uzytkownik, session, ikona_dla_okienka)
+    funkcje.ruch(wonsz, jedzienie, okienko_gry, canvas, wynik, wynik_label, uzytkownik, session, ikona_dla_okienka, login)
 
     okienko_gry.mainloop()

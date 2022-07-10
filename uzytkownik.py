@@ -30,7 +30,7 @@ def uzytkownik(session, ikona_dla_okienka, okienko_logowania, login):
     # button
     graj_button = Button(okienko_uzytkownika, text='GRAJ',
                          font=('Calibiri', 30), background='white', relief=RAISED, bd=10, compound="bottom",
-                         command=partial(gra.granie, session, ikona_dla_okienka, okienko_uzytkownika))
+                         command=partial(gra.granie, session, ikona_dla_okienka, okienko_uzytkownika, login))
     graj_button.place(x=320, y=560)
 
     okienko_uzytkownika.mainloop()
