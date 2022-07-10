@@ -1,7 +1,7 @@
 import funkcje
 from functools import partial
 from tkinter import *
-
+import gra
 
 def uzytkownik(session, ikona_dla_okienka, okienko_logowania, login):
     okienko_uzytkownika = Toplevel()  # ustawienie nowego okna jako glownego
@@ -29,7 +29,8 @@ def uzytkownik(session, ikona_dla_okienka, okienko_logowania, login):
     tlo_label.place(x=150, y=120)
     # button
     graj_button = Button(okienko_uzytkownika, text='GRAJ',
-                         font=('Calibiri', 30), background='white', relief=RAISED, bd=10, compound="bottom")
+                         font=('Calibiri', 30), background='white', relief=RAISED, bd=10, compound="bottom",
+                         command=partial(gra.granie, session, ikona_dla_okienka, okienko_uzytkownika))
     graj_button.place(x=320, y=560)
 
     okienko_uzytkownika.mainloop()

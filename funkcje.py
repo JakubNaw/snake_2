@@ -4,11 +4,14 @@ from tkinter import *
 from PIL import ImageTk, Image
 import time
 from sqlalchemy.orm import relationship
-import uzytkownik
 
+import gra
+import uzytkownik
+import random
+from functools import partial
 baza = declarative_base()
 # tworzenie modeli
-
+kierunek = 'dol'
 
 class Dane_do_logowania(baza):
     __tablename__ = 'dane_do_logowania'
@@ -208,3 +211,113 @@ def games_played(session, login_1):
     games_played_1 = session.query(Informacje).filter(
         Informacje.login == login_1).one()
     return str(games_played_1.games_played)
+
+# snake - gra
+
+
+class Cialo:
+    def __init__(self, ilosc_segmentow, canvas):
+        self.rozmiar = ilosc_segmentow
+        self.wspolrzedne = []
+        self.kwadraty = []
+
+        for i in range(0, ilosc_segmentow):
+            self.wspolrzedne.append([0, 0])
+        for x, y in self.wspolrzedne:
+            kwadrat = canvas.create_rectangle(x, y, x+50, y+50, fill='green', tag='wonsz')
+            self.kwadraty.append(kwadrat)
+
+
+class Jedzenie:
+    def __init__(self, canvas):
+        x = random.randint(0, 14) * 50  # 14 - bo szerokosc 750 a szerokosc jedzenia 50
+        y = random.randint(0, 12) * 50
+        self.wspolrzedne = [x, y]
+        canvas.create_oval(x, y, x+50, y+50, fill='red', tag='jedzenie')
+
+
+def ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka):
+    x, y = cialo.wspolrzedne[0]
+
+    if kierunek == 'gora':
+        y = y - 50
+    elif kierunek == 'dol':
+        y = y + 50
+    elif kierunek == 'prawo':
+        x = x + 50
+    elif kierunek == 'lewo':
+        x = x - 50
+    print(kierunek)
+    cialo.wspolrzedne.insert(0, (x, y))
+    kwadrat = canvas.create_rectangle(x, y, x + 50, y + 50, fill='green', tag='wonsz')
+    cialo.kwadraty.insert(0, kwadrat)
+
+    if x == jedzenie.wspolrzedne[0] and y == jedzenie.wspolrzedne[1]:
+        wynik = wynik + 1
+        wynik_label.config(text='Wynik: '+str(wynik))
+        canvas.delete("jedzenie")
+        jedzenie = Jedzenie(canvas)
+    else:
+        del cialo.wspolrzedne[-1]
+        canvas.delete(cialo.kwadraty[-1])
+        del cialo.kwadraty[-1]
+    if kolizja(cialo):
+        game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka)
+    else:
+        okienko_gry.after(200, ruch, cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session,
+                          ikona_dla_okienka)
+
+
+def zmiana_kierunku(nowy_kierunek):
+
+    global kierunek
+    if nowy_kierunek == 'gora' and kierunek != 'gora' and kierunek != 'dol':
+        kierunek = nowy_kierunek
+    elif nowy_kierunek == 'dol' and kierunek != 'gora' and kierunek != 'dol':
+        kierunek = nowy_kierunek
+    elif nowy_kierunek == 'prawo' and kierunek != 'prawo' and kierunek != 'lewo':
+        kierunek = nowy_kierunek
+    elif nowy_kierunek == 'lewo' and kierunek != 'prawo' and kierunek != 'lewo':
+        kierunek = nowy_kierunek
+
+
+def kolizja(cialo):
+    x, y = cialo.wspolrzedne[0]
+
+    if x < 0 or x >= 750:
+        print("game over")
+        return True
+    if y < 0 or y >= 750:
+        print("game over")
+        return True
+    for segment in cialo.wspolrzedne[1:]:
+        if x == segment[0] and y == segment[1]:
+            print('game over')
+            return True
+
+
+def game_over(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka):
+    canvas.delete(ALL)
+    global kierunek
+    kierunek = 'dol'
+    canvas.create_text(375, 325, font=('calibri', 60), text="GAME OVER", fill='red')
+    powrot_button = Button(canvas, text='Wróć', font=('Calibiri', 25), background='white', relief=RAISED, bd=10,
+                           compound="bottom", command=partial(wyloguj_sie, stare_okienko, okienko_gry))
+    powrot_button.place(x=190, y=370)
+    graj_dalej_button = Button(canvas, text='GRAJ DALEJ', font=('Calibiri', 25), background='white', relief=RAISED,
+                               bd=10, compound="bottom")
+    graj_dalej_button.config(command=partial(play_again, okienko_gry, canvas, wynik_label, stare_okienko, session,
+                                             ikona_dla_okienka, graj_dalej_button, powrot_button))
+    graj_dalej_button.place(x=330, y=370)
+
+
+def play_again(okienko_gry, canvas, wynik_label, stare_okienko, session, ikona_dla_okienka, graj_dalej_button,
+               powrot_button):
+    canvas.delete(ALL)
+    graj_dalej_button.destroy()
+    powrot_button.destroy()
+    wynik = 0
+    wynik_label.config(text='Wynik:'+str(wynik))
+    cialo = Cialo(2, canvas)
+    jedzenie = Jedzenie(canvas)
+    ruch(cialo, jedzenie, okienko_gry, canvas, wynik, wynik_label, stare_okienko, session, ikona_dla_okienka)
